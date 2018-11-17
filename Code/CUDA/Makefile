@@ -1,14 +1,14 @@
 CUDA_PATH ?= /usr/local/cuda
 
-CCC ?= g++
+CCC ?= g++-6
 NVCC := $(CUDA_PATH)/bin/nvcc -ccbin $(CCC)
 
 INCLUDES := -I$(CUDA_PATH)/samples/common/inc
 LIBRARIES :=
 
 ## Flags:
-NVCCFLAGS := -m64 -g -G
-CCFLAGS := -g 
+NVCCFLAGS := -m64 -O3
+CCFLAGS := -O3
 LDFLAGS := 
 
 
@@ -20,7 +20,7 @@ ALL_LDFLAGS :=
 ALL_LDFLAGS += $(addprefix -Xlinker ,$(LDFLAGS))
 
 
-SMS ?= 50
+SMS ?= 30
 GENCODE_FLAGS := -arch=sm_$(SMS)
 
 ##############################3

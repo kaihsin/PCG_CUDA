@@ -19,7 +19,7 @@ __global__ void Test(uint64_t *DStates, uint32_t *DOuts){
     
     #pragma unroll 
     for(int i=0;i<NOUT_PER_THREADS;i++){
-        DOuts[(blockIdx.x*blockDim.x + threadIdx.x)*NOUT_PER_THREADS+i] = Generate(BStates[threadIdx.x],blockIdx.x*blockDim.x + threadIdx.x);
+        DOuts[(blockIdx.x*blockDim.x + threadIdx.x)*NOUT_PER_THREADS+i] = pcg32_64(BStates[threadIdx.x],blockIdx.x*blockDim.x + threadIdx.x);
     }
     
     
@@ -69,13 +69,14 @@ int main(int argc, char *argv[]){
 
     
     ///Launch Kernel:
-    Test<<<GridSize_x,BlockSize_x,sizeof(uint64_t)*BlockSize_x>>>(DStates,DOuts);
+    for(unsigned int i=0;i<10000;i++)
+        Test<<<GridSize_x,BlockSize_x,sizeof(uint64_t)*BlockSize_x>>>(DStates,DOuts);
 
-    
+    printf("Done.%s","\n");
+
     ///Get Result -> Loc.
     cudaMemcpy(HOuts,DOuts,sizeof(uint32_t)*BlockSize_x*GridSize_x*NOUT_PER_THREADS,cudaMemcpyDeviceToHost);
     
-
 
     free(HStates);
     free(HOuts);

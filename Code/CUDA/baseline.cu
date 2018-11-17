@@ -1,6 +1,6 @@
 #include <cuda.h>
 
-__device__ uint32_t Generate(volatile uint64_t &state, uint64_t inc){
+__device__ uint32_t pcg32_64(volatile uint64_t &state, uint64_t inc){
     
     // Calculate output function (XSH RR), uses old state for max ILP
     uint32_t xorshifted = ((state >> 18u)^state) >> 27u;
